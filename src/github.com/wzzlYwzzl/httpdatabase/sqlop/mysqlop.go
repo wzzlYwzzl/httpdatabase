@@ -1,0 +1,92 @@
+package sqlop
+
+import (
+	"database/sql"
+	_ "github.com/go-sql-driver/mysql"
+	"log"
+)
+
+const defaultTable = "zjw"
+
+type User struct {
+	Name      string
+	Namespace string
+}
+
+type MysqlCon struct {
+	Host     string
+	Db       string
+	Name     string
+	Password string
+}
+
+func Insert(db *sql.DB, user *User) error {
+	qstr := "INSERT INTO " + defaultTable + " (id, name, namespace) VALUE(null, ?, ?)"
+	_, err := db.Exec(qstr, user.Name, user.Namespace)
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+
+	return nil
+}
+
+func Delete(db *sql.DB, user *User) error {
+
+	qstr := "DELETE FROM " + defaultTable + " WHERE namespace=?"
+	stmt, err := db.Prepare(qstr)
+	if err != nil {
+		log.Println("delete with error: ", err)
+		return err
+	}
+	_, err = stmt.Exec(user.Namespace)
+	if err != nil {
+		log.Println("Exec error: ", err)
+		return err
+	}
+
+	return nil
+}
+
+/**
+ * real connect mysql
+ * @param {[type]} mydb *MysqlCon) (*sql.DB, error [description]
+ */
+func Connect(mydb *MysqlCon) (*sql.DB, error) {
+	db, err := sql.Open("mysql", mydb.Name+":"+mydb.Password+"@tcp("+mydb.Host+")/"+mydb.Db+"?charset=utf8")
+	if err != nil {
+		log.Println("open mysql with error: ", err)
+		return db, err
+	}
+	err = db.Ping()
+	if err != nil {
+		log.Println("ping mysql with error:", err)
+		return db, err
+	}
+	return db, nil
+}
+
+/**
+ * query operation for namespaces
+ * @param {[type]} db   *sql.DB [description]
+ * @param {[type]} user *User)  ([]string,    error [description]
+ */
+func Query(db *sql.DB, user *User) ([]string, error) {
+	result := make([]string, 0, 10)
+	var tmpstr string
+
+	qstr := "SELECT namespace FROM " + defaultTable + " WHERE name=?"
+	rows, err := db.Query(qstr, user.Name)
+	if err != nil {
+		log.Println("Query error with :", err)
+		return result, err
+	}
+
+	for rows.Next() {
+		err = rows.Scan(&tmpstr)
+		result = append(result, tmpstr)
+		log.Println(tmpstr)
+	}
+
+	return result, nil
+}
