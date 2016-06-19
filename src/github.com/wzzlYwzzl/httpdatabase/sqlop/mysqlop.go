@@ -6,7 +6,10 @@ import (
 	"log"
 )
 
-const defaultTable = "zjw"
+const (
+	defaultDB    = "zjw"
+	defaultTable = "zjw"
+)
 
 type User struct {
 	Name      string
@@ -15,12 +18,11 @@ type User struct {
 
 type MysqlCon struct {
 	Host     string
-	Db       string
 	Name     string
 	Password string
 }
 
-func Insert(db *sql.DB, user *User) error {
+func (user *User) Insert(db *sql.DB) error {
 	qstr := "INSERT INTO " + defaultTable + " (id, name, namespace) VALUE(null, ?, ?)"
 	_, err := db.Exec(qstr, user.Name, user.Namespace)
 	if err != nil {
@@ -31,7 +33,7 @@ func Insert(db *sql.DB, user *User) error {
 	return nil
 }
 
-func Delete(db *sql.DB, user *User) error {
+func (user *User) Delete(db *sql.DB) error {
 
 	qstr := "DELETE FROM " + defaultTable + " WHERE namespace=?"
 	stmt, err := db.Prepare(qstr)
@@ -52,8 +54,8 @@ func Delete(db *sql.DB, user *User) error {
  * real connect mysql
  * @param {[type]} mydb *MysqlCon) (*sql.DB, error [description]
  */
-func Connect(mydb *MysqlCon) (*sql.DB, error) {
-	db, err := sql.Open("mysql", mydb.Name+":"+mydb.Password+"@tcp("+mydb.Host+")/"+mydb.Db+"?charset=utf8")
+func (user User) Connect(mydb *MysqlCon) (*sql.DB, error) {
+	db, err := sql.Open("mysql", mydb.Name+":"+mydb.Password+"@tcp("+mydb.Host+")/"+defaultDB+"?charset=utf8")
 	if err != nil {
 		log.Println("open mysql with error: ", err)
 		return db, err
@@ -71,7 +73,7 @@ func Connect(mydb *MysqlCon) (*sql.DB, error) {
  * @param {[type]} db   *sql.DB [description]
  * @param {[type]} user *User)  ([]string,    error [description]
  */
-func Query(db *sql.DB, user *User) ([]string, error) {
+func (user *User) Query(db *sql.DB) ([]string, error) {
 	result := make([]string, 0, 10)
 	var tmpstr string
 
@@ -85,8 +87,9 @@ func Query(db *sql.DB, user *User) ([]string, error) {
 	for rows.Next() {
 		err = rows.Scan(&tmpstr)
 		result = append(result, tmpstr)
-		log.Println(tmpstr)
+		log.Println("find namespace", tmpstr)
 	}
 
+	log.Printf("length of find namespace result is %d", len(result))
 	return result, nil
 }

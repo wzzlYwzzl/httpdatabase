@@ -8,17 +8,17 @@ import (
 )
 
 func testmysql() {
-	user := User{"zjw1", "zjw1"}
+	user := &User{"zjw1", "zjw1"}
 	host := MysqlCon{Host: "localhost:3306", Db: "zjw", Name: "root", Password: "123456"}
 	//db, err := sql.Open("mysql", "root:123456@/zjw")
-	db, err := Connect(&host)
+	db, err := user.Connect(&host)
 	if err != nil {
 		panic("mysql open error")
 	}
 
 	defer db.Close()
 
-	res, err := Query(db, &user)
+	res, err := user.Query(db)
 	if err != nil {
 		panic(err)
 	}
