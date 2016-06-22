@@ -54,14 +54,14 @@ func (apiHandler *ApiHandler) CreateApiHandler() http.Handler {
 	log.Printf("CreateAPiHander")
 	userWs := new(restful.WebService)
 	userWs.Filter(wsLogger)
-	userWs.Path("/api/v1/users").
+	userWs.Path("/api/v1/user").
 		//Consumes(restful.MIME_JSON).
 		Produces(restful.MIME_JSON)
-	userWs.Route(userWs.HEAD("/{name}").
-		To(apiHandler.judgeUser))
-	userWs.Route(userWs.POST("/{name}/{namespaces}").
-		To(apiHandler.createNS))
 	userWs.Route(userWs.GET("/{name}").
+		To(apiHandler.judgeUser))
+	userWs.Route(userWs.GET("/{name}/{namespaces}").
+		To(apiHandler.createNS))
+	userWs.Route(userWs.GET("/ns/{name}").
 		To(apiHandler.getNS))
 
 	wsContainer.Add(userWs)
@@ -84,7 +84,7 @@ func (apiHandler *ApiHandler) judgeUser(request *restful.Request, response *rest
 		response.WriteHeader(http.StatusNotFound)
 		return
 	}
-	response.WriteHeader(http.StatusFound)
+	response.WriteHeader(http.StatusOK)
 }
 
 func (apiHandler *ApiHandler) createNS(request *restful.Request, response *restful.Response) {
