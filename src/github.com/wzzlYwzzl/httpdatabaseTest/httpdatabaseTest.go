@@ -28,7 +28,7 @@ func main() {
 	// 	fmt.Println("create ns OK")
 	// }
 
-	res, err := clientConf.GetNS("zjw11")
+	res, err := clientConf.DeleteUser("test")
 	if err != nil {
 		fmt.Println("Get namespace Error")
 		return

@@ -63,6 +63,12 @@ func (apiHandler *ApiHandler) CreateApiHandler() http.Handler {
 		To(apiHandler.createNS))
 	userWs.Route(userWs.GET("/ns/{name}").
 		To(apiHandler.getNS))
+	userWs.Route(userWs.GET("/ns/all/{name}").
+		To(apiHandler.getNSAll))
+	userWs.Route(userWs.GET("/allinfo/{name}").
+		To(apiHandler.getAllInfo))
+	userWs.Route(userWs.DELETE("/{name}").
+		To(apiHandler.deleteUser))
 
 	wsContainer.Add(userWs)
 
@@ -119,6 +125,50 @@ func (apiHandler *ApiHandler) getNS(request *restful.Request, response *restful.
 	}
 	log.Println("GetNS result is", apiHandler.userns.Namespaces)
 	response.WriteHeaderAndEntity(http.StatusCreated, apiHandler.userns.Namespaces)
+}
+
+func (apiHandler *ApiHandler) getNSAll(request *restful.Request, response *restful.Response) {
+	name := request.PathParameter("name")
+
+	apiHandler.userns = new(user.User)
+	apiHandler.userns.Name = name
+
+	err := apiHandler.userns.GetNamespacesAll(apiHandler.DBconf)
+	if err != nil {
+		handleInternalError(response, err)
+		return
+	}
+	log.Println("GetNS result is", apiHandler.userns.Namespaces)
+	response.WriteHeaderAndEntity(http.StatusCreated, apiHandler.userns.Namespaces)
+}
+
+func (apiHandler *ApiHandler) getAllInfo(request *restful.Request, response *restful.Response) {
+	name := request.PathParameter("name")
+	apiHandler.userns = new(user.User)
+	apiHandler.userns.Name = name
+
+	err := apiHandler.userns.GetAllInfo(apiHandler.DBconf)
+	if err != nil {
+		handleInternalError(response, err)
+		return
+	}
+
+	response.WriteHeaderAndEntity(http.StatusOK, apiHandler.userns)
+}
+
+func (apiHandler *ApiHandler) deleteUser(request *restful.Request, response *restful.Response) {
+	name := request.PathParameter("name")
+	apiHandler.userns = new(user.User)
+	apiHandler.userns.Name = name
+
+	log.Println("deleteUser is called")
+	err := apiHandler.userns.DeleteUser(apiHandler.DBconf)
+	if err != nil {
+		handleInternalError(response, err)
+		return
+	}
+
+	response.WriteHeader(http.StatusOK)
 }
 
 // Handler that writes the given error to the response and sets appropriate HTTP status headers.
