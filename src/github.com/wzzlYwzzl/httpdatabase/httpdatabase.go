@@ -24,6 +24,7 @@ var (
 
 func main() {
 	pflag.Parse()
+	log.SetFlags(log.Ldate | log.Ltime | log.Lshortfile)
 
 	dbconf := new(sqlop.MysqlCon)
 	dbconf.Host = *argDatabaseHost

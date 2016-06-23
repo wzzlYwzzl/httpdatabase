@@ -1,6 +1,7 @@
 package client
 
 import (
+	"bytes"
 	"encoding/json"
 	"io/ioutil"
 	"log"
@@ -15,13 +16,12 @@ type Client struct {
 
 func (c Client) JudgeName(name string) (bool, error) {
 	url := "http://" + c.Host + "/api/v1/user/" + name
-	log.Println("url is", url)
 	resp, err := http.Get(url)
 	if err != nil {
 		log.Println(err)
 		return false, err
 	}
-	log.Println("response status is ", resp.StatusCode)
+
 	if resp.StatusCode == http.StatusOK {
 		return true, nil
 	}
@@ -59,7 +59,7 @@ func (c Client) GetNS(name string) ([]string, error) {
 		log.Println("ReadAll error :", err)
 		return ns, err
 	}
-	log.Println(body)
+
 	err = json.Unmarshal(body, &ns)
 	if err != nil {
 		log.Println("json Unmarshal  error :", err)
@@ -134,6 +134,28 @@ func (c Client) DeleteUser(name string) (bool, error) {
 	}
 
 	if resp.StatusCode == http.StatusOK {
+		return true, nil
+	}
+
+	return false, nil
+}
+
+func (c Client) CreateUser(user *user.User) (bool, error) {
+	url := "http://" + c.Host + "/api/v1/user/"
+	bs, err := json.Marshal(*user)
+	if err != nil {
+		log.Println("error in file client.go: ", err)
+		return false, err
+	}
+
+	reader := bytes.NewReader(bs)
+	resp, err := http.Post(url, "application/json", reader)
+	if err != nil {
+		log.Println("error in file client.go:", err)
+		return false, err
+	}
+
+	if resp.StatusCode == http.StatusCreated {
 		return true, nil
 	}
 

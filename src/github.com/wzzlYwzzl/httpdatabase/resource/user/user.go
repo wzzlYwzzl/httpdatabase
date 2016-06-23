@@ -98,19 +98,38 @@ func (user *User) CreateNamespace(dbconf *sqlop.MysqlCon) error {
 
 func (user *User) CreateUser(dbconf *sqlop.MysqlCon) error {
 	userinfo := new(sqlop.UserInfo)
+	resource := new(sqlop.UserResource)
+	userns := new(sqlop.User)
+
 	userinfo.Name = user.Name
 	userinfo.Password = user.Password
 	userinfo.Cpus = user.Cpus
 	userinfo.Mem = user.Memory
+	resource.Name = user.Name
+	userns.Name = user.Name
+	userns.Namespace = user.Name + "_default"
 
 	db, err := userinfo.Connect(dbconf)
 	if err != nil {
+		log.Println("file : user.go, function")
 		return err
 	}
 
 	defer db.Close()
 
 	err = userinfo.Insert(db)
+	if err != nil {
+		return err
+	}
+
+	//At the same time, create one namespace entry in table userns
+	err = userns.Insert(db)
+	if err != nil {
+		return err
+	}
+
+	//At the same time, create one resource entry
+	err = resource.Insert(db)
 	if err != nil {
 		return err
 	}
@@ -161,11 +180,35 @@ func (user *User) GetUser(dbconf *sqlop.MysqlCon) error {
 	return nil
 }
 
+func (user *User) UpdateResource(dbconf *sqlop.MysqlCon) error {
+	userrs := new(sqlop.UserResource)
+	userrs.Name = user.Name
+	userrs.CpusUse = user.CpusUse
+	userrs.MemUse = user.MemoryUse
+
+	db, err := userrs.Connect(dbconf)
+	if err != nil {
+		return err
+	}
+
+	defer db.Close()
+
+	err = userrs.Update(db)
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+
+	return nil
+}
+
 func (user *User) GetAllInfo(dbconf *sqlop.MysqlCon) error {
 	dbuser := new(sqlop.User)
 	userinfo := new(sqlop.UserInfo)
+	rs := new(sqlop.UserResource)
 	userinfo.Name = user.Name
 	dbuser.Name = user.Name
+	rs.Name = user.Name
 
 	db, err := userinfo.Connect(dbconf)
 	if err != nil {
@@ -183,9 +226,18 @@ func (user *User) GetAllInfo(dbconf *sqlop.MysqlCon) error {
 		log.Println(err)
 		return err
 	}
+
+	err = rs.GetRS(db)
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+
 	user.Password = userinfo.Password
 	user.Cpus = userinfo.Cpus
 	user.Memory = userinfo.Mem
+	user.CpusUse = rs.CpusUse
+	user.MemoryUse = rs.MemUse
 
 	return nil
 }

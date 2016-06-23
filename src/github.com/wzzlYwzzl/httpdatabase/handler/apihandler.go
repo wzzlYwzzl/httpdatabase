@@ -69,6 +69,9 @@ func (apiHandler *ApiHandler) CreateApiHandler() http.Handler {
 		To(apiHandler.getAllInfo))
 	userWs.Route(userWs.DELETE("/{name}").
 		To(apiHandler.deleteUser))
+	userWs.Route(userWs.POST("").
+		To(apiHandler.createUser).
+		Reads(user.User{}))
 
 	wsContainer.Add(userWs)
 
@@ -169,6 +172,23 @@ func (apiHandler *ApiHandler) deleteUser(request *restful.Request, response *res
 	}
 
 	response.WriteHeader(http.StatusOK)
+}
+
+func (apiHandler *ApiHandler) createUser(request *restful.Request, response *restful.Response) {
+	user := new(user.User)
+	err := request.ReadEntity(user)
+	if err != nil {
+		handleInternalError(response, err)
+		return
+	}
+
+	err = user.CreateUser(apiHandler.DBconf)
+	if err != nil {
+		handleInternalError(response, err)
+		return
+	}
+
+	response.WriteHeader(http.StatusCreated)
 }
 
 // Handler that writes the given error to the response and sets appropriate HTTP status headers.

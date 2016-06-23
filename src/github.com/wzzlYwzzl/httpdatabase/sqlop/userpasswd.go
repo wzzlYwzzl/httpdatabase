@@ -22,7 +22,7 @@ type UserInfo struct {
 }
 
 func (u UserInfo) Insert(db *sql.DB) error {
-	qstr := "INSERT INTO " + defaultUserTable + " VALUE(?,?,?,?)"
+	qstr := "INSERT INTO " + defaultUserTable + " VALUE(NULL,?,?,?,?)"
 	_, err := db.Exec(qstr, u.Name, u.Password, u.Cpus, u.Mem)
 	if err != nil {
 		log.Println(err)
