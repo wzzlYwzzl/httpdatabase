@@ -111,4 +111,14 @@ func main() {
 	} else {
 		fmt.Println("UpdateResource doesn't work")
 	}
+
+	//test9
+	userlist, err := clientConf.GetAllUserInfo()
+	if err != nil {
+		fmt.Println("GetAllUserInfo Error")
+		return
+	} else {
+		fmt.Println(userlist)
+	}
+
 }

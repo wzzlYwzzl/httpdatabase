@@ -16,6 +16,10 @@ type User struct {
 	MemoryUse  int      `json:"memoryuse"`
 }
 
+type UserList struct {
+	UserList []User `json:"userlist"`
+}
+
 func (user User) JudgeExist(dbconf *sqlop.MysqlCon) (bool, error) {
 	dbuser := new(sqlop.User)
 	dbuser.Name = user.Name
@@ -215,6 +219,8 @@ func (user *User) GetAllInfo(dbconf *sqlop.MysqlCon) error {
 		return err
 	}
 
+	defer db.Close()
+
 	user.Namespaces, err = dbuser.Query(db)
 	if err != nil {
 		log.Println(err)
@@ -238,6 +244,31 @@ func (user *User) GetAllInfo(dbconf *sqlop.MysqlCon) error {
 	user.Memory = userinfo.Mem
 	user.CpusUse = rs.CpusUse
 	user.MemoryUse = rs.MemUse
+
+	return nil
+}
+
+func (userlist *UserList) GetAllUserInfo(dbconf *sqlop.MysqlCon) error {
+	userinfo := new(sqlop.UserInfo)
+
+	db, err := userinfo.Connect(dbconf)
+	if err != nil {
+		return err
+	}
+
+	defer db.Close()
+
+	users, err := userinfo.QueryUsers(db)
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+
+	userlist.UserList = make([]User, len(users))
+	for i := 0; i < len(users); i++ {
+		userlist.UserList[i].Name = users[i]
+		userlist.UserList[i].GetAllInfo(dbconf)
+	}
 
 	return nil
 }

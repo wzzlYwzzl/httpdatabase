@@ -183,3 +183,30 @@ func (c Client) UpdateResource(user *user.User) (bool, error) {
 
 	return false, nil
 }
+
+func (c Client) GetAllUserInfo() (*user.UserList, error) {
+	userlist := new(user.UserList)
+	url := "http://" + c.Host + "/api/v1/user/all"
+
+	resp, err := http.Get(url)
+	if err != nil {
+		log.Println(err)
+		return nil, err
+	}
+
+	defer resp.Body.Close()
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Println("ReadAll in func GetAllInfo err: ", err)
+		return nil, err
+	}
+
+	err = json.Unmarshal(body, userlist)
+	if err != nil {
+		log.Println("json Unmarshal err: ", err)
+		return nil, err
+	}
+
+	return userlist, nil
+}

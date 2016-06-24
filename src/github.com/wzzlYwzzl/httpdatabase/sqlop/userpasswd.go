@@ -77,3 +77,22 @@ func (u *UserInfo) Query(db *sql.DB) error {
 
 	return nil
 }
+
+func (u *UserInfo) QueryUsers(db *sql.DB) ([]string, error) {
+	result := make([]string, 0)
+	var tmpstr string
+
+	qstr := "SELECT name FROM " + defaultUserTable
+	rows, err := db.Query(qstr)
+	if err != nil {
+		log.Println(err)
+		return nil, err
+	}
+
+	for rows.Next() {
+		err = rows.Scan(&tmpstr)
+		result = append(result, tmpstr)
+	}
+
+	return result, nil
+}

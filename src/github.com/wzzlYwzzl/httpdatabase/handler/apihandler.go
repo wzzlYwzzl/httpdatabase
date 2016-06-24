@@ -75,6 +75,9 @@ func (apiHandler *ApiHandler) CreateApiHandler() http.Handler {
 	userWs.Route(userWs.POST("/resource").
 		To(apiHandler.updateResource).
 		Reads(user.User{}))
+	userWs.Route(userWs.GET("/all").
+		To(apiHandler.getAllUserInfo).
+		Writes(user.UserList{}))
 
 	wsContainer.Add(userWs)
 
@@ -209,6 +212,18 @@ func (apiHandler *ApiHandler) updateResource(request *restful.Request, response 
 	}
 
 	response.WriteHeader(http.StatusCreated)
+}
+
+func (apiHandler *ApiHandler) getAllUserInfo(request *restful.Request, response *restful.Response) {
+	userlist := new(user.UserList)
+
+	err := userlist.GetAllUserInfo(apiHandler.DBconf)
+	if err != nil {
+		handleInternalError(response, err)
+		return
+	}
+
+	response.WriteHeaderAndEntity(http.StatusOK, userlist)
 }
 
 // Handler that writes the given error to the response and sets appropriate HTTP status headers.

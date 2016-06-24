@@ -82,7 +82,7 @@ func (user *User) Query(db *sql.DB) ([]string, error) {
 	qstr := "SELECT namespace FROM " + defaultTable + "," + defaultUserTable + " WHERE " +
 		defaultTable + ".user_id=" + defaultUserTable + ".user_id and " + defaultUserTable +
 		".name=" + "'" + user.Name + "'"
-	log.Println(qstr)
+
 	rows, err := db.Query(qstr)
 	if err != nil {
 		log.Println("Query error with :", err)
@@ -92,7 +92,6 @@ func (user *User) Query(db *sql.DB) ([]string, error) {
 	for rows.Next() {
 		err = rows.Scan(&tmpstr)
 		result = append(result, tmpstr)
-		log.Println("find namespace", tmpstr)
 	}
 
 	log.Printf("length of find namespace result is %d", len(result))
