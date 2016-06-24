@@ -144,14 +144,36 @@ func (c Client) CreateUser(user *user.User) (bool, error) {
 	url := "http://" + c.Host + "/api/v1/user/"
 	bs, err := json.Marshal(*user)
 	if err != nil {
-		log.Println("error in file client.go: ", err)
+		log.Println(err)
 		return false, err
 	}
 
 	reader := bytes.NewReader(bs)
 	resp, err := http.Post(url, "application/json", reader)
 	if err != nil {
-		log.Println("error in file client.go:", err)
+		log.Println(err)
+		return false, err
+	}
+
+	if resp.StatusCode == http.StatusCreated {
+		return true, nil
+	}
+
+	return false, nil
+}
+
+func (c Client) UpdateResource(user *user.User) (bool, error) {
+	url := "http://" + c.Host + "/api/v1/user/resource"
+	bs, err := json.Marshal(*user)
+	if err != nil {
+		log.Println(err)
+		return false, err
+	}
+
+	reader := bytes.NewReader(bs)
+	resp, err := http.Post(url, "application/json", reader)
+	if err != nil {
+		log.Println(err)
 		return false, err
 	}
 

@@ -72,6 +72,9 @@ func (apiHandler *ApiHandler) CreateApiHandler() http.Handler {
 	userWs.Route(userWs.POST("").
 		To(apiHandler.createUser).
 		Reads(user.User{}))
+	userWs.Route(userWs.POST("/resource").
+		To(apiHandler.updateResource).
+		Reads(user.User{}))
 
 	wsContainer.Add(userWs)
 
@@ -183,6 +186,23 @@ func (apiHandler *ApiHandler) createUser(request *restful.Request, response *res
 	}
 
 	err = user.CreateUser(apiHandler.DBconf)
+	if err != nil {
+		handleInternalError(response, err)
+		return
+	}
+
+	response.WriteHeader(http.StatusCreated)
+}
+
+func (apiHandler *ApiHandler) updateResource(request *restful.Request, response *restful.Response) {
+	user := new(user.User)
+	err := request.ReadEntity(user)
+	if err != nil {
+		handleInternalError(response, err)
+		return
+	}
+
+	err = user.UpdateResource(apiHandler.DBconf)
 	if err != nil {
 		handleInternalError(response, err)
 		return

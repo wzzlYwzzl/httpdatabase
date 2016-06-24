@@ -10,7 +10,7 @@ import (
 
 func main() {
 	clientConf := client.Client{Host: "localhost:9080"}
-	user := &user.User{Name: "test-zjw", Password: "test-zjw", Cpus: 10, Memory: 500}
+	user := &user.User{Name: "test-zjw", Password: "test-zjw", Cpus: 10, Memory: 500, CpusUse: 8, MemoryUse: 123}
 
 	log.SetFlags(log.Ldate | log.Ltime | log.Lshortfile)
 	//test 1
@@ -88,16 +88,27 @@ func main() {
 		fmt.Println("CreateUser doesn't work")
 	}
 
-	//test7
-	b, err = clientConf.DeleteUser("test-zjw")
+	// //test7
+	// b, err = clientConf.DeleteUser("test-zjw")
+	// if err != nil {
+	// 	fmt.Println("DeleteUser Error")
+	// 	return
+	// }
+	// if b == true {
+	// 	fmt.Println("DeleteUser work well")
+	// } else {
+	// 	fmt.Println("DeleteUser doesn't work")
+	// }
+
+	//test8
+	b, err = clientConf.UpdateResource(user)
 	if err != nil {
-		fmt.Println("DeleteUser Error")
+		fmt.Println("UpdateResource Error")
 		return
 	}
 	if b == true {
-		fmt.Println("DeleteUser work well")
+		fmt.Println("UpdateResource work well")
 	} else {
-		fmt.Println("DeleteUser doesn't work")
+		fmt.Println("UpdateResource doesn't work")
 	}
-
 }
