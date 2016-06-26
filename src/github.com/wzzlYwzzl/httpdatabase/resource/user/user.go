@@ -21,8 +21,9 @@ type UserList struct {
 }
 
 func (user User) JudgeExist(dbconf *sqlop.MysqlCon) (bool, error) {
-	dbuser := new(sqlop.User)
+	dbuser := new(sqlop.UserInfo)
 	dbuser.Name = user.Name
+	dbuser.Password = user.Password
 
 	db, err := dbuser.Connect(dbconf)
 	if err != nil {
@@ -31,10 +32,14 @@ func (user User) JudgeExist(dbconf *sqlop.MysqlCon) (bool, error) {
 
 	defer db.Close()
 
-	res, err := dbuser.Query(db)
-	if err != nil || len(res) == 0 {
+	err = dbuser.QueryOne(db)
+	if err != nil {
 		log.Printf("return false")
 		return false, err
+	}
+
+	if dbuser.Name == "" {
+		return false, nil
 	}
 
 	return true, nil
