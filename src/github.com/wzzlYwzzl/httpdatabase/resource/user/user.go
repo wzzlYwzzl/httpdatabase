@@ -17,7 +17,7 @@ type User struct {
 }
 
 type UserList struct {
-	UserList []User `json:"userlist"`
+	UserList []User `json:"userList"`
 }
 
 func (user User) JudgeExist(dbconf *sqlop.MysqlCon) (bool, error) {
