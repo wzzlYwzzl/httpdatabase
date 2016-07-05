@@ -250,8 +250,24 @@ func (c HttpDBClient) DeleteApp(appName string) (bool, error) {
 		return false, err
 	}
 
+	defer resp.Body.Close()
+
 	if resp.StatusCode == http.StatusOK {
 		return true, nil
+	}
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Println("ReadAll in func GetAllInfo err: ", err)
+		return nil, err
+	}
+
+	deploy := new(user.UserDeploy)
+
+	err = json.Unmarshal(body, deploy)
+	if err != nil {
+		log.Println("json Unmarshal err: ", err)
+		return nil, err
 	}
 
 	return false, nil

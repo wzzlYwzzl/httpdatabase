@@ -319,16 +319,22 @@ func (ud *UserDeploy) DeleteApp(dbconf *sqlop.MysqlCon) error {
 
 	defer db.Close()
 
-	deploy.Name = ud.Name
 	deploy.AppName = ud.AppName
-	deploy.CpusUse = ud.CpusUse
-	deploy.MemoryUse = ud.MemeoryUse
+
+	err = deploy.Query(db)
+	if err != nil {
+		log.Println(err)
+		return err
+	}
 
 	err = deploy.Delete(db)
 	if err != nil {
 		log.Println(err)
 		return err
 	}
+
+	ud.CpusUse = deploy.CpusUse
+	ud.MemeoryUse = deploy.MemoryUse
 
 	return nil
 }
