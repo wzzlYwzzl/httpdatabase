@@ -237,7 +237,7 @@ func (c HttpDBClient) AddApp(deploy *user.UserDeploy) (bool, error) {
 
 func (c HttpDBClient) DeleteApp(appName string) (*user.UserDeploy, error) {
 	client := &http.Client{}
-	url := "http://" + c.Host + "/api/v1/user/app" + appName
+	url := "http://" + c.Host + "/api/v1/user/app/" + appName
 	req, err := http.NewRequest("DELETE", url, nil)
 	if err != nil {
 		log.Println(err)

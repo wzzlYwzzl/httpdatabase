@@ -1,33 +1,33 @@
 package main
 
 import (
-	//"fmt"
+//"fmt"
 
-	"github.com/wzzlYwzzl/httpdatabase/client"
-	"github.com/wzzlYwzzl/httpdatabase/resource/user"
+//	"github.com/wzzlYwzzl/httpdatabase/client"
+//	"github.com/wzzlYwzzl/httpdatabase/resource/user"
 )
 
-type UserListChannel struct {
-	List  chan *user.UserList
-	Error chan error
-}
+// type UserListChannel struct {
+// 	List  chan *user.UserList
+// 	Error chan error
+// }
 
-func GetUserListChannel(client client.Client, numReads int) UserListChannel {
-	channel := UserListChannel{
-		List:  make(chan *user.UserList, numReads),
-		Error: make(chan error, numReads),
-	}
+// func GetUserListChannel(client client.Client, numReads int) UserListChannel {
+// 	channel := UserListChannel{
+// 		List:  make(chan *user.UserList, numReads),
+// 		Error: make(chan error, numReads),
+// 	}
 
-	go func() {
-		rcs, err := client.GetAllUserInfo()
-		for i := 0; i < numReads; i++ {
-			channel.List <- rcs
-			channel.Error <- err
-		}
-	}()
+// 	go func() {
+// 		rcs, err := client.GetAllUserInfo()
+// 		for i := 0; i < numReads; i++ {
+// 			channel.List <- rcs
+// 			channel.Error <- err
+// 		}
+// 	}()
 
-	return channel
-}
+// 	return channel
+// }
 
 func main() {
 	// 	client := client.Client{Host: "localhost:9080"}

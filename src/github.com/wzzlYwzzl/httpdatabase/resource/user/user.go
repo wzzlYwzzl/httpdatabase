@@ -21,10 +21,10 @@ type UserList struct {
 }
 
 type UserDeploy struct {
-	Name       string
-	AppName    string
-	CpusUse    int
-	MemeoryUse int
+	Name      string
+	AppName   string
+	CpusUse   int
+	MemoryUse int
 }
 
 func (user User) JudgeExist(dbconf *sqlop.MysqlCon) (bool, error) {
@@ -298,7 +298,7 @@ func (ud *UserDeploy) CreateApp(dbconf *sqlop.MysqlCon) error {
 	deploy.Name = ud.Name
 	deploy.AppName = ud.AppName
 	deploy.CpusUse = ud.CpusUse
-	deploy.MemoryUse = ud.MemeoryUse
+	deploy.MemoryUse = ud.MemoryUse
 
 	err = deploy.Insert(db)
 	if err != nil {
@@ -334,7 +334,7 @@ func (ud *UserDeploy) DeleteApp(dbconf *sqlop.MysqlCon) error {
 	}
 
 	ud.CpusUse = deploy.CpusUse
-	ud.MemeoryUse = deploy.MemoryUse
+	ud.MemoryUse = deploy.MemoryUse
 
 	return nil
 }

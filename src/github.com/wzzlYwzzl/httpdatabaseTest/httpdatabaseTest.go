@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"log"
+	//"log"
 
 	"github.com/wzzlYwzzl/httpdatabase/client"
 	"github.com/wzzlYwzzl/httpdatabase/resource/user"
@@ -10,115 +10,137 @@ import (
 
 func TestBasic() {
 	clientConf := client.HttpDBClient{Host: "localhost:9080"}
-	user := &user.User{Name: "test-zjw", Password: "test-zjw", Cpus: 10, Memory: 500, CpusUse: 8, MemoryUse: 123}
+	// user := &user.User{Name: "test-zjw", Password: "test-zjw", Cpus: 10, Memory: 500, CpusUse: 8, MemoryUse: 123}
 
-	log.SetFlags(log.Ldate | log.Ltime | log.Lshortfile)
-	//test 1
-	b, err := clientConf.JudgeName("admin", "admin123")
-	if err != nil {
-		fmt.Println("judegeName Error")
-		return
-	}
-	if b == true {
-		fmt.Println("JudgeName work well")
-	} else {
-		fmt.Println("JudgeName doesn't work")
-	}
-
-	//test2
-	b, err = clientConf.CreateNS("admin", "admin_namespace_test")
-	if err != nil {
-		fmt.Println("CreateNS Error")
-		return
-	}
-	if b == true {
-		fmt.Println("CreateNS work well")
-	} else {
-		fmt.Println("CreateNS doesn't work")
-	}
-
-	//test3
-	ns, err := clientConf.GetNS("admin")
-	if err != nil {
-		fmt.Println("GetNS Error")
-		return
-	}
-	if len(ns) != 0 {
-		fmt.Println("GetNS work well")
-		fmt.Println(ns)
-	} else {
-		fmt.Println("GetNS doesn't work")
-	}
-
-	//test4
-	ns, err = clientConf.GetNSAll("admin")
-	if err != nil {
-		fmt.Println("GetNSAll Error")
-		return
-	}
-	if len(ns) != 0 {
-		fmt.Println("GetNSAll work well")
-		fmt.Println(ns)
-	} else {
-		fmt.Println("GetNSAll doesn't work")
-	}
-
-	//test5
-	us, err := clientConf.GetAllInfo("admin")
-	if err != nil {
-		fmt.Println("GetAllInfo Error")
-		return
-	}
-	if len(ns) != 0 {
-		fmt.Println("GetAllInfo work well")
-		fmt.Println(us)
-	} else {
-		fmt.Println("GetAllInfo doesn't work")
-	}
-
-	//test6
-	b, err = clientConf.CreateUser(user)
-	if err != nil {
-		fmt.Println("CreateUser Error")
-		return
-	}
-	if b == true {
-		fmt.Println("CreateUser work well")
-	} else {
-		fmt.Println("CreateUser doesn't work")
-	}
-
-	// //test7
-	// b, err = clientConf.DeleteUser("test-zjw")
+	// log.SetFlags(log.Ldate | log.Ltime | log.Lshortfile)
+	// //test 1
+	// b, err := clientConf.JudgeName("admin", "admin123")
 	// if err != nil {
-	// 	fmt.Println("DeleteUser Error")
+	// 	fmt.Println("judegeName Error")
 	// 	return
 	// }
 	// if b == true {
-	// 	fmt.Println("DeleteUser work well")
+	// 	fmt.Println("JudgeName work well")
 	// } else {
-	// 	fmt.Println("DeleteUser doesn't work")
+	// 	fmt.Println("JudgeName doesn't work")
 	// }
 
-	//test8
-	b, err = clientConf.UpdateResource(user)
-	if err != nil {
-		fmt.Println("UpdateResource Error")
+	// //test2
+	// b, err = clientConf.CreateNS("admin", "admin_namespace_test")
+	// if err != nil {
+	// 	fmt.Println("CreateNS Error")
+	// 	return
+	// }
+	// if b == true {
+	// 	fmt.Println("CreateNS work well")
+	// } else {
+	// 	fmt.Println("CreateNS doesn't work")
+	// }
+
+	// //test3
+	// ns, err := clientConf.GetNS("admin")
+	// if err != nil {
+	// 	fmt.Println("GetNS Error")
+	// 	return
+	// }
+	// if len(ns) != 0 {
+	// 	fmt.Println("GetNS work well")
+	// 	fmt.Println(ns)
+	// } else {
+	// 	fmt.Println("GetNS doesn't work")
+	// }
+
+	// //test4
+	// ns, err = clientConf.GetNSAll("admin")
+	// if err != nil {
+	// 	fmt.Println("GetNSAll Error")
+	// 	return
+	// }
+	// if len(ns) != 0 {
+	// 	fmt.Println("GetNSAll work well")
+	// 	fmt.Println(ns)
+	// } else {
+	// 	fmt.Println("GetNSAll doesn't work")
+	// }
+
+	// //test5
+	// us, err := clientConf.GetAllInfo("admin")
+	// if err != nil {
+	// 	fmt.Println("GetAllInfo Error")
+	// 	return
+	// }
+	// if len(ns) != 0 {
+	// 	fmt.Println("GetAllInfo work well")
+	// 	fmt.Println(us)
+	// } else {
+	// 	fmt.Println("GetAllInfo doesn't work")
+	// }
+
+	// //test6
+	// b, err = clientConf.CreateUser(user)
+	// if err != nil {
+	// 	fmt.Println("CreateUser Error")
+	// 	return
+	// }
+	// if b == true {
+	// 	fmt.Println("CreateUser work well")
+	// } else {
+	// 	fmt.Println("CreateUser doesn't work")
+	// }
+
+	// // //test7
+	// // b, err = clientConf.DeleteUser("test-zjw")
+	// // if err != nil {
+	// // 	fmt.Println("DeleteUser Error")
+	// // 	return
+	// // }
+	// // if b == true {
+	// // 	fmt.Println("DeleteUser work well")
+	// // } else {
+	// // 	fmt.Println("DeleteUser doesn't work")
+	// // }
+
+	// //test8
+	// b, err = clientConf.UpdateResource(user)
+	// if err != nil {
+	// 	fmt.Println("UpdateResource Error")
+	// 	return
+	// }
+	// if b == true {
+	// 	fmt.Println("UpdateResource work well")
+	// } else {
+	// 	fmt.Println("UpdateResource doesn't work")
+	// }
+
+	// //test9
+	// userlist, err := clientConf.GetAllUserInfo()
+	// if err != nil {
+	// 	fmt.Println("GetAllUserInfo Error")
+	// 	return
+	// } else {
+	// 	fmt.Println(userlist)
+	// }
+
+	//test10
+	deploy := new(user.UserDeploy)
+	deploy.Name = "admin"
+	deploy.AppName = "test"
+	deploy.CpusUse = 2
+	deploy.MemoryUse = 100
+
+	if _, err := clientConf.AddApp(deploy); err != nil {
+		fmt.Println("AddApp error")
 		return
-	}
-	if b == true {
-		fmt.Println("UpdateResource work well")
 	} else {
-		fmt.Println("UpdateResource doesn't work")
+		fmt.Println("AddApp success")
 	}
 
-	//test9
-	userlist, err := clientConf.GetAllUserInfo()
-	if err != nil {
-		fmt.Println("GetAllUserInfo Error")
+	if res, err := clientConf.DeleteApp(deploy.AppName); err != nil {
+		fmt.Println("DeleteApp error")
 		return
 	} else {
-		fmt.Println(userlist)
+		fmt.Println("DeleteApp success")
+		fmt.Println(res)
 	}
 
 }

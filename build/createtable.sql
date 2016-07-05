@@ -42,6 +42,5 @@ CREATE TABLE `deployment` (
     `cpus_use` int DEFAULT NULL,
     `mem_use` int DEFAULT NULL,
     PRIMARY KEY (`deploy_id`),
-    UNIQUE KEY (`user_id`)
     FOREIGN KEY (`user_id`) REFERENCES userpasswd(`user_id`) ON UPDATE CASCADE ON DELETE CASCADE
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
