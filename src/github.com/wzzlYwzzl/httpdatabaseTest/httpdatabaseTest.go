@@ -10,7 +10,7 @@ import (
 
 func TestBasic() {
 	clientConf := client.HttpDBClient{Host: "localhost:9080"}
-	// user := &user.User{Name: "test-zjw", Password: "test-zjw", Cpus: 10, Memory: 500, CpusUse: 8, MemoryUse: 123}
+	user := &user.User{Name: "admin", Password: "admin", Cpus: 10, Memory: 500, CpusUse: 8, MemoryUse: 123}
 
 	// log.SetFlags(log.Ldate | log.Ltime | log.Lshortfile)
 	// //test 1
@@ -100,17 +100,17 @@ func TestBasic() {
 	// // 	fmt.Println("DeleteUser doesn't work")
 	// // }
 
-	// //test8
-	// b, err = clientConf.UpdateResource(user)
-	// if err != nil {
-	// 	fmt.Println("UpdateResource Error")
-	// 	return
-	// }
-	// if b == true {
-	// 	fmt.Println("UpdateResource work well")
-	// } else {
-	// 	fmt.Println("UpdateResource doesn't work")
-	// }
+	//test8
+	b, err := clientConf.UpdateResource(user)
+	if err != nil {
+		fmt.Println("UpdateResource Error")
+		return
+	}
+	if b == true {
+		fmt.Println("UpdateResource work well")
+	} else {
+		fmt.Println("UpdateResource doesn't work")
+	}
 
 	// //test9
 	// userlist, err := clientConf.GetAllUserInfo()
@@ -122,25 +122,25 @@ func TestBasic() {
 	// }
 
 	//test10
-	deploy := new(user.UserDeploy)
-	deploy.Name = "admin"
-	deploy.AppName = "test"
-	deploy.CpusUse = 2
-	deploy.MemoryUse = 100
+	// deploy := new(user.UserDeploy)
+	// deploy.Name = "admin"
+	// deploy.AppName = "test"
+	// deploy.CpusUse = 2
+	// deploy.MemoryUse = 100
 
-	if _, err := clientConf.AddApp(deploy); err != nil {
-		fmt.Println("AddApp error")
-		return
-	} else {
-		fmt.Println("AddApp success")
-	}
+	// if _, err := clientConf.AddApp(deploy); err != nil {
+	// 	fmt.Println("AddApp error")
+	// 	return
+	// } else {
+	// 	fmt.Println("AddApp success")
+	// }
 
-	if res, err := clientConf.DeleteApp(deploy.AppName); err != nil {
-		fmt.Println("DeleteApp error")
-		return
-	} else {
-		fmt.Println("DeleteApp success")
-		fmt.Println(res)
-	}
+	// if res, err := clientConf.DeleteApp(deploy.AppName); err != nil {
+	// 	fmt.Println("DeleteApp error")
+	// 	return
+	// } else {
+	// 	fmt.Println("DeleteApp success")
+	// 	fmt.Println(res)
+	// }
 
 }

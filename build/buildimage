@@ -3,4 +3,7 @@ CGO_ENABLED=0 go build -ldflags '-s' -a -installsuffix cgo -o httpdatabasenew  p
 
 docker build  --rm=true  --tag wzzlywzzl/httpdatabase:v1.0.0 ../bin
 
+//推送到docker cloud上
+docker push wzzlywzzl/httpdatabase:tagname
+
 docker run  -d --privileged --net=host wzzlywzzl/httpdatabase:v1.0.0 --username=root --password=123456 
