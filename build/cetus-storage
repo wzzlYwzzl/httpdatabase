@@ -1,0 +1,8 @@
+1. install cetus
+
+2. add server
+
+3. create volume
+cetusadm createvol  kubevolume -r 2 192.168.100.59:/data/kube 192.168.100.60:/data/kube 192.168.100.61:/data/kube 192.168.100.62:/data/kube
+
+4. mount -t cetusfs 192.168.100.59:kubevolume /var/lib/data
